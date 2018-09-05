@@ -32,6 +32,9 @@
   }, {
     "name" : "Profile UI config",
     "description" : "User related UI configuration"
+  }, {
+    "name" : "Store groups",
+    "description" : "Store groups management"
   } ],
   "security" : [ {
     "bearerAuth" : [ ]
@@ -1017,6 +1020,53 @@
             "$ref" : "#/components/responses/UnexpectedError"
           }
         }
+      }
+    },
+    "/store-groups-treetable" : {
+      "get" : {
+        "tags" : [ "Store groups" ],
+        "parameters" : [ {
+          "in" : "query",
+          "name" : null,
+          "required" : false
+        } ]
+      }
+    },
+    "/store-groups" : {
+      "post" : {
+        "tags" : [ "Store groups" ]
+      }
+    },
+    "/store-groups/{id}" : {
+      "get" : {
+        "tags" : [ "Store groups" ]
+      },
+      "put" : {
+        "tags" : [ "Store groups" ]
+      },
+      "delete" : {
+        "tags" : [ "Store groups" ]
+      }
+    },
+    "/store-subgroups" : {
+      "post" : {
+        "tags" : [ "Store groups" ]
+      }
+    },
+    "/store-subgroups/{id}" : {
+      "get" : {
+        "tags" : [ "Store groups" ]
+      },
+      "put" : {
+        "tags" : [ "Store groups" ]
+      },
+      "delete" : {
+        "tags" : [ "Store groups" ]
+      }
+    },
+    "/store-tree-nodes/{id}" : {
+      "get" : {
+        "tags" : [ "Store groups" ]
       }
     }
   },
