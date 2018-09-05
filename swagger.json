@@ -855,6 +855,8 @@
       } ],
       "get" : {
         "tags" : [ "Profile UI config" ],
+        "summary" : "Get all users UI component config.",
+        "description" : "Get all UI component configs for specified User.\n",
         "responses" : {
           "200" : {
             "description" : "OK - The request was successful, the UI component definitions are returned.",
@@ -943,6 +945,8 @@
       } ],
       "get" : {
         "tags" : [ "Profile UI config" ],
+        "summary" : "Get UI component config for user.",
+        "description" : "Get UI component config for specified User.\n",
         "responses" : {
           "200" : {
             "description" : "OK - The request was successful, the UI component definitions are returned.",
@@ -973,6 +977,8 @@
       "put" : {
         "tags" : [ "Profile UI config" ],
         "operationId" : "updateUiComponentConfig",
+        "summary" : "Update UI component config.",
+        "description" : "Update UI component config for specified User.\n",
         "requestBody" : {
           "description" : "Update UI component config for specified User.",
           "required" : true,
