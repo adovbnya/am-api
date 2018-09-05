@@ -848,6 +848,51 @@
           }
         }
       }
+    },
+    "/profiles/{userIdOrMe}/ui-component-cfgs" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/UserIdOrMePath"
+      } ],
+      "get" : {
+        "tags" : [ "Profile UI config" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the UI component definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "object"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/profiles/{userIdOrMe}/ui-component-cfgs/{idOrKey}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/UserIdOrMePath"
+      }, {
+        "$ref" : "#/components/parameters/IdOrKeyPath"
+      } ],
+      "get" : {
+        "tags" : [ "Profile UI config" ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the UI component definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "object"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components" : {
@@ -1255,6 +1300,20 @@
         "example" : [ "id,asc", "name,desc" ]
       },
       "IdOrKeyPath" : {
+        "name" : "idOrKey",
+        "in" : "path",
+        "required" : true,
+        "description" : "Entity `id` or `key`",
+        "schema" : {
+          "oneOf" : [ {
+            "type" : "number",
+            "format" : "int64"
+          }, {
+            "type" : "string"
+          } ]
+        }
+      },
+      "UserIdOrMePath" : {
         "name" : "idOrKey",
         "in" : "path",
         "required" : true,
