@@ -695,6 +695,29 @@
             "$ref" : "#/components/responses/UnexpectedError"
           }
         }
+      },
+      "delete" : {
+        "summary" : "Delete a rule.",
+        "description" : "Delete a rule.\n",
+        "tags" : [ "Rules" ],
+        "operationId" : "deleteRule",
+        "responses" : {
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
       }
     }
   },
