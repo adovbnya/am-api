@@ -1078,6 +1078,10 @@
       }
     },
     "/store-groups" : {
+      "get" : {
+        "tags" : [ "Store groups" ],
+        "summary" : "Get store groups."
+      },
       "post" : {
         "tags" : [ "Store groups" ],
         "summary" : "Create store group."
