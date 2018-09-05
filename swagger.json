@@ -808,7 +808,7 @@
         }
       }
     },
-    "/ui-component-defs/{idOrKey}" : {
+    "/ui-component-definitions/{idOrKey}" : {
       "parameters" : [ {
         "$ref" : "#/components/parameters/IdOrKeyPath"
       } ],
@@ -1380,16 +1380,111 @@
         } ]
       },
       "UiComponentDefinition" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "typeKey" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "visible" : {
+            "type" : "boolean"
+          },
+          "itemDefinitions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UiItemDefinition"
+            }
+          }
+        }
       },
       "UiItemDefinition" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "typeKey" : {
+            "type" : "string"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "hidden" : {
+            "type" : "boolean"
+          },
+          "visible" : {
+            "type" : "boolean"
+          },
+          "sortable" : {
+            "type" : "boolean"
+          },
+          "order" : {
+            "type" : "number",
+            "format" : "int32"
+          },
+          "componentDefinition" : {
+            "$ref" : "#/components/schemas/UiComponentDefinition"
+          }
+        }
       },
       "UiComponentConfig" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "visible" : {
+            "type" : "boolean"
+          },
+          "definition" : {
+            "$ref" : "#/components/schemas/UiComponentDefinition"
+          },
+          "itemConfigs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/UiItemConfig"
+            }
+          }
+        }
       },
       "UiItemConfig" : {
-        "type" : "object"
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "hidden" : {
+            "type" : "boolean"
+          },
+          "visible" : {
+            "type" : "boolean"
+          },
+          "sortable" : {
+            "type" : "boolean"
+          },
+          "order" : {
+            "type" : "number",
+            "format" : "int32"
+          },
+          "definition" : {
+            "$ref" : "#/components/schemas/UiItemDefinition"
+          }
+        }
       },
       "Error" : {
         "description" : "API operation error response object",
