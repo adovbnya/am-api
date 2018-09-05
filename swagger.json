@@ -305,6 +305,48 @@
       }
     },
     "/msrulegroups" : {
+      "get" : {
+        "tags" : [ "Group of rules" ],
+        "operationId" : "getMsRuleGroupsList",
+        "summary" : "Get rules groups list.",
+        "description" : "Get a group of rules list.\n",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule groups are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "oneOf" : [ {
+                    "$ref" : "#/components/schemas/BasicMsRuleGroup"
+                  }, {
+                    "$ref" : "#/components/schemas/CategoricalMsRuleGroup"
+                  }, {
+                    "$ref" : "#/components/schemas/ProductMsRuleGroup"
+                  } ],
+                  "discriminator" : {
+                    "propertyName" : "typeKey"
+                  }
+                }
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      },
       "post" : {
         "tags" : [ "Group of rules" ],
         "operationId" : "createMsRuleGroup",
