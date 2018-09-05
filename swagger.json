@@ -1314,16 +1314,17 @@
         }
       },
       "UserIdOrMePath" : {
-        "name" : "idOrKey",
+        "name" : "userIdOrMe",
         "in" : "path",
         "required" : true,
-        "description" : "Entity `id` or `key`",
+        "description" : "User `id` or `me` to reference on current signed in user.",
         "schema" : {
           "oneOf" : [ {
             "type" : "number",
             "format" : "int64"
           }, {
-            "type" : "string"
+            "type" : "string",
+            "enum" : [ "me" ]
           } ]
         }
       }
