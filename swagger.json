@@ -21,8 +21,17 @@
     }
   } ],
   "tags" : [ {
-    "description" : "Getting defined UI components definitions",
-    "name" : "UI view definition"
+    "name" : "Rules tree"
+  }, {
+    "name" : "Group of rules"
+  }, {
+    "name" : "Rules"
+  }, {
+    "name" : "UI view definition",
+    "description" : "Getting defined UI components definitions"
+  }, {
+    "name" : "Profile UI config",
+    "description" : "User related UI configuration"
   } ],
   "security" : [ {
     "bearerAuth" : [ ]
