@@ -1024,7 +1024,7 @@
         }
       }
     },
-    "/store-groups-treetable" : {
+    "/store-groups-treetable/rows" : {
       "get" : {
         "tags" : [ "Store groups" ],
         "summary" : "Get store groups treetable rows.",
@@ -1075,10 +1075,16 @@
         "summary" : "Delete store subgroup."
       }
     },
-    "/store-tree-nodes/{id}" : {
+    "/store-tree-nodes" : {
       "get" : {
         "tags" : [ "Store groups" ],
         "summary" : "Get store hierarchy."
+      }
+    },
+    "/product-category-tree-nodes" : {
+      "get" : {
+        "tags" : [ "Product category" ],
+        "summary" : "Gets category tree hierarchy"
       }
     }
   },
