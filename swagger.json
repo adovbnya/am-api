@@ -727,6 +727,7 @@
     "/ui-component-keys" : {
       "get" : {
         "tags" : [ "UI view definition" ],
+        "summary" : "Get all UI component keys.",
         "operationId" : "getUiComponentKeys",
         "responses" : {
           "200" : {
@@ -739,6 +740,84 @@
                     "type" : "string"
                   },
                   "example" : [ "TreeTableRuleBasic", "TreeTableRuleCategorical", "TreeTableRuleProduct", "TreeTableStoreGroup", "TreeStore", "TreeProductCategory", "TableProduct", "TreeProduct" ]
+                }
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/ui-component-defs" : {
+      "get" : {
+        "tags" : [ "UI view definition" ],
+        "summary" : "Get all UI component definitions.",
+        "operationId" : "getUiComponentDefinitions",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the UI component definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UiComponentDefinition"
+                  }
+                }
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/ui-component-defs/{idOrKey}" : {
+      "parameters" : [ {
+        "$ref" : "#/components/parameters/IdOrKeyPath"
+      } ],
+      "get" : {
+        "tags" : [ "UI view definition" ],
+        "summary" : "Get UI component definition.",
+        "description" : "Get UI component definition by `id` or `key`.",
+        "operationId" : "getUiComponentDefinitionByIdOrKey",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the UI component definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/UiComponentDefinition"
+                  }
                 }
               }
             }
@@ -1127,6 +1206,9 @@
           }
         } ]
       },
+      "UiComponentDefinition" : {
+        "type" : "object"
+      },
       "Error" : {
         "description" : "API operation error response object",
         "type" : "object",
@@ -1162,6 +1244,20 @@
           "$ref" : "#/components/schemas/SortParamsSchema"
         },
         "example" : [ "id,asc", "name,desc" ]
+      },
+      "IdOrKeyPath" : {
+        "name" : "idOrKey",
+        "in" : "path",
+        "required" : true,
+        "description" : "Entity `id` or `key`",
+        "schema" : {
+          "oneOf" : [ {
+            "type" : "number",
+            "format" : "int64"
+          }, {
+            "type" : "string"
+          } ]
+        }
       }
     },
     "links" : {
