@@ -863,7 +863,7 @@
                 "schema" : {
                   "type" : "array",
                   "items" : {
-                    "type" : "object"
+                    "$ref" : "#/components/components/UiComponentConfig"
                   }
                 }
               }
@@ -886,7 +886,7 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "type" : "object"
+                  "$ref" : "#/components/components/UiComponentConfig"
                 }
               }
             }
@@ -1261,6 +1261,12 @@
         } ]
       },
       "UiComponentDefinition" : {
+        "type" : "object"
+      },
+      "UiItemConfig" : {
+        "type" : "object"
+      },
+      "UiComponentConfig" : {
         "type" : "object"
       },
       "Error" : {
