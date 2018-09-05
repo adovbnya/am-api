@@ -35,6 +35,8 @@
   }, {
     "name" : "Store groups",
     "description" : "Store groups management"
+  }, {
+    "name" : "Product category"
   } ],
   "security" : [ {
     "bearerAuth" : [ ]
@@ -1025,6 +1027,7 @@
     "/store-groups-treetable" : {
       "get" : {
         "tags" : [ "Store groups" ],
+        "summary" : "Get store groups treetable rows.",
         "parameters" : [ {
           "in" : "query",
           "name" : null,
