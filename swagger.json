@@ -870,6 +870,55 @@
             }
           }
         }
+      },
+      "post" : {
+        "tags" : [ "Profile UI config" ],
+        "operationId" : "createUserUiComponentConfig",
+        "summary" : "Create UI component config.",
+        "description" : "Create UI component config for specified User.\n",
+        "requestBody" : {
+          "description" : "UI component config object to create.",
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UiComponentConfig"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created - The request was successful and the resource is returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/UiComponentConfig"
+                }
+              }
+            },
+            "headers" : {
+              "Location" : {
+                "$ref" : "#/components/headers/Location"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
       }
     },
     "/profiles/{userIdOrMe}/ui-component-cfgs/{idOrKey}" : {
