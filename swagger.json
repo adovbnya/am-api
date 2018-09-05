@@ -864,10 +864,24 @@
                   "type" : "array",
                   "items" : {
                     "$ref" : "#/components/schemas/UiComponentConfig"
-                  }
+                  },
+                  "304" : null
                 }
               }
-            }
+            },
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
           }
         }
       },
@@ -935,10 +949,66 @@
             "content" : {
               "application/json" : {
                 "schema" : {
+                  "$ref" : "#/components/schemas/UiComponentConfig",
+                  "304" : null
+                }
+              }
+            },
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      },
+      "put" : {
+        "tags" : [ "Profile UI config" ],
+        "operationId" : "updateUiComponentConfig",
+        "requestBody" : {
+          "description" : "Update UI component config for specified User.",
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/UiComponentConfig"
+              }
+            }
+          }
+        },
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful and the updated resource is returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
                   "$ref" : "#/components/schemas/UiComponentConfig"
                 }
               }
             }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "404" : {
+            "$ref" : "#/components/responses/NotFound"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
           }
         }
       }
