@@ -771,7 +771,7 @@
         }
       }
     },
-    "/ui-component-defs" : {
+    "/ui-component-definitions" : {
       "get" : {
         "tags" : [ "UI view definition" ],
         "summary" : "Get all UI component definitions.",
@@ -849,7 +849,7 @@
         }
       }
     },
-    "/profiles/{userIdOrMe}/ui-component-cfgs" : {
+    "/profiles/{userIdOrMe}/ui-component-configs" : {
       "parameters" : [ {
         "$ref" : "#/components/parameters/UserIdOrMePath"
       } ],
@@ -935,7 +935,7 @@
         }
       }
     },
-    "/profiles/{userIdOrMe}/ui-component-cfgs/{idOrKey}" : {
+    "/profiles/{userIdOrMe}/ui-component-configs/{idOrKey}" : {
       "parameters" : [ {
         "$ref" : "#/components/parameters/UserIdOrMePath"
       }, {
