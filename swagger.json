@@ -36,7 +36,11 @@
     "name" : "Store groups",
     "description" : "Store groups management"
   }, {
+    "name" : "Store hierarchy"
+  }, {
     "name" : "Product category"
+  }, {
+    "name" : "Product hierarchy"
   } ],
   "security" : [ {
     "bearerAuth" : [ ]
@@ -1123,7 +1127,7 @@
     },
     "/store-tree-nodes" : {
       "get" : {
-        "tags" : [ "Store groups" ],
+        "tags" : [ "Store hierarchy" ],
         "summary" : "Get store hierarchy."
       }
     },
