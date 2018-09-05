@@ -20,6 +20,10 @@
       }
     }
   } ],
+  "tags" : [ {
+    "description" : "Getting defined UI components definitions",
+    "name" : "UI view definition"
+  } ],
   "security" : [ {
     "bearerAuth" : [ ]
   } ],
@@ -716,6 +720,28 @@
           },
           "5XX" : {
             "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/ui-component-keys" : {
+      "get" : {
+        "tags" : [ "UI view definition" ],
+        "operationId" : "getUiComponentKeys",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the UI component keys are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "type" : "string"
+                  },
+                  "example" : [ "TreeTableRuleBasic", "TreeTableRuleCategorical", "TreeTableRuleProduct", "TreeTableStoreGroup", "TreeStore", "TreeProductCategory", "TableProduct", "TreeProduct" ]
+                }
+              }
+            }
           }
         }
       }
