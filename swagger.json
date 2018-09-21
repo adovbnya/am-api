@@ -10,7 +10,7 @@
     }
   },
   "servers" : [ {
-    "url" : "https://{environment}/v0.1",
+    "url" : "https://{environment}/api",
     "description" : "The API server.",
     "variables" : {
       "environment" : {
@@ -41,6 +41,12 @@
     "name" : "Product category"
   }, {
     "name" : "Product hierarchy"
+  }, {
+    "name" : "Attribute filters"
+  }, {
+    "name" : "Reports"
+  }, {
+    "name" : "Users"
   } ],
   "security" : [ {
     "bearerAuth" : [ ]
@@ -310,6 +316,23 @@
     },
     "/msrulegroups" : {
       "get" : {
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "typeKey",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "required" : false,
+          "name" : "view",
+          "schema" : {
+            "type" : "string",
+            "enum" : [ "preview", "shortview", "listview" ],
+            "default" : "preview"
+          }
+        } ],
         "tags" : [ "Group of rules" ],
         "operationId" : "getMsRuleGroupsList",
         "summary" : "Get rules groups list.",
@@ -329,7 +352,16 @@
                   } ],
                   "discriminator" : {
                     "propertyName" : "typeKey"
-                  }
+                  },
+                  "example" : [ {
+                    "id" : 10,
+                    "name" : "Group-A",
+                    "typeKey" : "MsRuleGroup.Basic"
+                  }, {
+                    "id" : 20,
+                    "name" : "Group-B",
+                    "typeKey" : "MsRuleGroup.Basic"
+                  } ]
                 }
               }
             }
@@ -498,6 +530,16 @@
                 } ],
                 "discriminator" : {
                   "propertyName" : "typeKey"
+                },
+                "example" : {
+                  "id" : 14,
+                  "typeKey" : "MsRuleGroup.Basic",
+                  "name" : "11",
+                  "validFor" : {
+                    "from" : "2017-07-21T17:32:28Z",
+                    "to" : "2012007-21T17:32:28Z"
+                  },
+                  "priority" : 3
                 }
               }
             }
@@ -658,6 +700,7 @@
       "get" : {
         "tags" : [ "Rules" ],
         "operationId" : "getMsRule",
+        "summary" : "Get a rule by id.",
         "responses" : {
           "200" : {
             "description" : "OK - The request was successful, the rule are returned.",
@@ -698,6 +741,7 @@
       "put" : {
         "tags" : [ "Rules" ],
         "operationId" : "updateMsRule",
+        "summary" : "Update a rule.",
         "requestBody" : {
           "description" : "Rule object to update.",
           "required" : true,
@@ -733,6 +777,25 @@
                   } ],
                   "discriminator" : {
                     "propertyName" : "typeKey"
+                  },
+                  "example" : {
+                    "id" : 10,
+                    "typeKey" : "MsRule.Basic",
+                    "inUse" : true,
+                    "useRounding" : true,
+                    "useYFacings" : false,
+                    "useTopLayer" : false,
+                    "useDepthCapacityLimit" : false,
+                    "factor" : {
+                      "type" : "COEFFICIENT",
+                      "value" : 10.5
+                    },
+                    "group" : {
+                      "id" : 8,
+                      "typeKey" : "MsRuleGroup.Basic",
+                      "name" : "Group-1"
+                    },
+                    "priority" : 44
                   }
                 }
               }
@@ -1070,15 +1133,205 @@
         }
       }
     },
-    "/store-groups-treetable/rows" : {
+    "/store-groups-treetable" : {
       "get" : {
         "tags" : [ "Store groups" ],
-        "summary" : "Get store groups treetable rows.",
+        "summary" : "Get all store groups as treetable.",
+        "description" : "Gets fist level list of tree store nodes (groups).\n\nIn case of `forceExpandAll` is `true` then all tree will be returned (**all nodes with nested childrens**).\n",
         "parameters" : [ {
           "in" : "query",
-          "name" : null,
-          "required" : false
-        } ]
+          "name" : "forceExpandAll",
+          "allowEmptyValue" : true,
+          "schema" : {
+            "type" : "boolean",
+            "default" : false,
+            "example" : true
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule tree are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/StoreGroupTreeTableRow"
+                  }
+                },
+                "example" : [ {
+                  "id" : 10,
+                  "typeKey" : "StoreGroup",
+                  "cellValues" : {
+                    "id" : 10,
+                    "name" : "сегмент"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 3,
+                    "productCategoryRefs" : [ {
+                      "name" : "Батон",
+                      "parent" : [ {
+                        "name" : "Хлеб",
+                        "parent" : [ {
+                          "name" : "Пекарня"
+                        } ]
+                      } ]
+                    } ],
+                    "unassignedStoreRefs" : [ ]
+                  },
+                  "children" : [ {
+                    "id" : 10,
+                    "typeKey" : "StoreSubgroup",
+                    "cellValues" : {
+                      "id" : 10,
+                      "name" : "элит",
+                      "description" : "Consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore.",
+                      "rowData" : {
+                        "storeRefs" : [ {
+                          "id" : 111,
+                          "storeNumber" : 191,
+                          "storeTreeNode" : {
+                            "id" : 111,
+                            "key" : "пр-т Николая Бажана, 8",
+                            "name" : "пр-т Николая Бажана, 8",
+                            "parent" : {
+                              "id" : 111,
+                              "key" : "Дарницкий",
+                              "name" : "Дарницкий",
+                              "parent" : {
+                                "id" : 111,
+                                "key" : "Киев",
+                                "name" : "Киев"
+                              }
+                            }
+                          }
+                        }, {
+                          "id" : 222,
+                          "storeNumber" : 192,
+                          "storeTreeNode" : {
+                            "id" : 111,
+                            "key" : "ул. Гната Хоткевича, 1а",
+                            "name" : "ул. Гната Хоткевича, 1а",
+                            "parent" : {
+                              "id" : 111,
+                              "key" : "Деснянский",
+                              "name" : "Деснянский",
+                              "parent" : {
+                                "id" : 111,
+                                "key" : "Киев",
+                                "name" : "Киев"
+                              }
+                            }
+                          }
+                        }, {
+                          "id" : 333,
+                          "storeNumber" : 1654,
+                          "storeTreeNode" : {
+                            "id" : 111,
+                            "key" : "пр-т Броварской, 18д",
+                            "name" : "пр-т Броварской, 18д",
+                            "parent" : {
+                              "id" : 111,
+                              "key" : "Деснянский",
+                              "name" : "Деснянский",
+                              "parent" : {
+                                "id" : 111,
+                                "key" : "Киев",
+                                "name" : "Киев"
+                              }
+                            }
+                          }
+                        } ]
+                      }
+                    }
+                  }, {
+                    "id" : 20,
+                    "typeKey" : "StoreSubgroup",
+                    "cellValues" : {
+                      "id" : 20,
+                      "name" : "эконом",
+                      "description" : "Enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip."
+                    }
+                  }, {
+                    "id" : 30,
+                    "typeKey" : "StoreSubgroup",
+                    "cellValues" : {
+                      "id" : 30,
+                      "name" : "премиум",
+                      "product" : "Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore."
+                    }
+                  } ]
+                }, {
+                  "id" : 20,
+                  "typeKey" : "StoreGroup",
+                  "cellValues" : {
+                    "id" : 20,
+                    "name" : "регион"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0,
+                    "productCategoryRefs" : [ {
+                      "id" : 11,
+                      "name" : "Батон"
+                    } ],
+                    "unassignedStoreRefs" : [ {
+                      "id" : 20100,
+                      "storeNumber" : 2321,
+                      "storeTreeNode" : {
+                        "id" : 20100,
+                        "key" : "ул. Евгения Сверстюка, 4",
+                        "name" : "ул. Евгения Сверстюка, 4",
+                        "parent" : {
+                          "id" : 20100,
+                          "key" : "Днепровский",
+                          "name" : "Днепровский",
+                          "parent" : {
+                            "id" : 20100,
+                            "key" : "Киев",
+                            "name" : "Киев"
+                          }
+                        }
+                      }
+                    }, {
+                      "id" : 20200,
+                      "storeNumber" : 195,
+                      "storeTreeNode" : {
+                        "id" : 20100,
+                        "key" : "пр-т Броварской, 17",
+                        "name" : "пр-т Броварской, 17",
+                        "parent" : {
+                          "id" : 20200,
+                          "key" : "Днепровский",
+                          "name" : "Днепровский",
+                          "parent" : {
+                            "id" : 20200,
+                            "key" : "Киев",
+                            "name" : "Киев"
+                          }
+                        }
+                      }
+                    } ]
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
       }
     },
     "/store-groups" : {
@@ -1134,18 +1387,1059 @@
     "/product-category-tree-nodes" : {
       "get" : {
         "tags" : [ "Product category" ],
-        "summary" : "Gets category tree hierarchy"
+        "summary" : "Gets category tree root elements.",
+        "description" : "Gets fist level list of product category nodes.\n",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "expandToNodes",
+          "description" : "Nodes id's list which must be loaded necessarily. If specified then this nodes will be attached as children.",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "number",
+              "format" : "int64"
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule tree are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TreeTableRow"
+                  }
+                },
+                "example" : [ {
+                  "id" : 2874,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 2874,
+                    "name" : "NOVUS"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 6
+                  },
+                  "children" : [ {
+                    "id" : 2875,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 2875,
+                      "name" : "Food"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 16
+                    }
+                  }, {
+                    "id" : 2876,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 2876,
+                      "name" : "Non Food"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 0
+                    }
+                  }, {
+                    "id" : 5977,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 5977,
+                      "name" : "Season Zone"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 1
+                    }
+                  }, {
+                    "id" : 5671,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 5671,
+                      "name" : "Виробництво"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 0
+                    }
+                  }, {
+                    "id" : 5430,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 5430,
+                      "name" : "Касса"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 0
+                    }
+                  }, {
+                    "id" : 5998,
+                    "typeKey" : "ProductCategoryNode",
+                    "cellValues" : {
+                      "id" : 5998,
+                      "name" : "Кафетерій"
+                    },
+                    "rowData" : {
+                      "childrenTotal" : 0
+                    }
+                  } ]
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/product-category-tree-nodes/{nodeId}/children" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "nodeId",
+        "description" : "Product category node id.",
+        "required" : true,
+        "schema" : {
+          "type" : "number",
+          "format" : "int64"
+        }
+      } ],
+      "get" : {
+        "tags" : [ "Product category" ],
+        "summary" : "Gets product category tree node children.",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule tree are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TreeTableRow"
+                  }
+                },
+                "example" : [ {
+                  "id" : 2875,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 2875,
+                    "name" : "Food"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 16
+                  }
+                }, {
+                  "id" : 2876,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 2876,
+                    "name" : "Non Food"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "id" : 5977,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 5977,
+                    "name" : "Season Zone"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 1
+                  }
+                }, {
+                  "id" : 5671,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 5671,
+                    "name" : "Виробництво"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "id" : 5430,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 5430,
+                    "name" : "Касса"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "id" : 5998,
+                  "typeKey" : "ProductCategoryNode",
+                  "cellValues" : {
+                    "id" : 5998,
+                    "name" : "Кафетерій"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/product-tree-nodes" : {
+      "get" : {
+        "tags" : [ "Product hierarchy" ],
+        "summary" : "Gets product tree nodes.",
+        "description" : "Gets fist level list of product tree nodes.\n",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "expandForUpcs",
+          "description" : "Product UPC codes to idetify nodes list which must be loaded necessarily. If specified then this nodes will be attached as children.",
+          "required" : false,
+          "schema" : {
+            "type" : "array",
+            "items" : {
+              "type" : "string",
+              "format" : null
+            }
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule tree are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TreeTableRow"
+                  }
+                },
+                "example" : [ {
+                  "id" : 3,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 3,
+                    "name" : "БАКАЛІЯ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 22
+                  }
+                }, {
+                  "id" : 4,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 4,
+                    "name" : "ВИТРАТНІ МАТЕРІАЛИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 7
+                  }
+                }, {
+                  "id" : 5,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 5,
+                    "name" : "КАФЕТЕРІЙ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 6
+                  }
+                }, {
+                  "id" : 6,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 6,
+                    "name" : "НАПОЇ,ЦИГАРКИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 5
+                  }
+                }, {
+                  "id" : 7,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 7,
+                    "name" : "НЕПРОДОВ.ТОВАРИ НЕ ПЕРШОЇ НЕОБХІД"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 24
+                  }
+                }, {
+                  "id" : 8,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 8,
+                    "name" : "НЕПРОДОВОЛЬЧІ ТОВАРИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 25
+                  }
+                }, {
+                  "id" : 9,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 9,
+                    "name" : "ПОСЛУГИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 3
+                  }
+                }, {
+                  "id" : 10,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 10,
+                    "name" : "ПРОДУКЦІЯ ВЛАСНОГО ВИРОБНИЦТВА"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 12
+                  }
+                }, {
+                  "id" : 11,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 11,
+                    "name" : "ШВИДКОПСУЮЧІ ХАРЧОВІ ТОВАРИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 21
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/product-tree-nodes/{nodeId}/children" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "nodeId",
+        "description" : "Product category node id.",
+        "required" : true,
+        "schema" : {
+          "type" : "number",
+          "format" : "int64",
+          "example" : 9
+        }
+      } ],
+      "get" : {
+        "tags" : [ "Product hierarchy" ],
+        "summary" : "Gets product tree node children.",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the rule tree are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/TreeTableRow"
+                  }
+                },
+                "example" : [ {
+                  "id" : 102,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 102,
+                    "name" : "ЕКСПЛУАТАЦІЯ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 1
+                  }
+                }, {
+                  "id" : 103,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 103,
+                    "name" : "ІНШІ ПОСЛУГИ"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 2
+                  }
+                }, {
+                  "id" : 104,
+                  "typeKey" : "ProductTreeNode",
+                  "cellValues" : {
+                    "id" : 104,
+                    "name" : "ПОСЛУГИ ІНФО-ЦЕНТРА"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 2
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/product-tree-nodes/{nodeId}/products" : {
+      "parameters" : [ {
+        "in" : "path",
+        "required" : true,
+        "name" : "nodeId",
+        "description" : "Products tree hierarchy node id.",
+        "schema" : {
+          "type" : "number",
+          "format" : "int64"
+        }
+      } ],
+      "get" : {
+        "operationId" : "getTreeNodeProducts",
+        "tags" : [ "Product hierarchy" ],
+        "summary" : "Gets products of the tree node (pagination + sorting + filtering).",
+        "parameters" : [ {
+          "$ref" : "#/components/parameters/Page"
+        }, {
+          "$ref" : "#/components/parameters/PageSize"
+        }, {
+          "$ref" : "#/components/parameters/Sort"
+        }, {
+          "in" : "query",
+          "name" : "upc.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "name.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "manufacturer.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "brand.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descA.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descB.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descC.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descD.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descE.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descF.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descG.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descH.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descI.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        }, {
+          "in" : "query",
+          "name" : "descJ.contains",
+          "required" : false,
+          "schema" : {
+            "type" : "string"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Products list of product tree node",
+            "links" : {
+              "next" : {
+                "description" : "The link relation for the immediate next page of results (returns only if next page exist).",
+                "operationId" : "getTreeNodeProducts",
+                "parameters" : {
+                  "page" : "$response.header.X-Next-Page",
+                  "size" : "$response.header.X-Per-Page"
+                }
+              },
+              "prev" : {
+                "description" : "The link relation for the immediate previous page of results (returns only if previous page exist).",
+                "operationId" : "getTreeNodeProducts",
+                "parameters" : {
+                  "page" : "$response.header.X-Prev-Page",
+                  "size" : "$response.header.X-Per-Page"
+                }
+              },
+              "last" : {
+                "description" : "The link relation for the last page of results.",
+                "operationId" : "getTreeNodeProducts",
+                "parameters" : {
+                  "page" : "$response.header.X-Total-Pages",
+                  "size" : "$response.header.X-Per-Page"
+                }
+              },
+              "first" : {
+                "description" : "The link relation for the first page of results (page numbering base `0`).",
+                "operationId" : "getTreeNodeProducts",
+                "parameters" : {
+                  "page" : 1,
+                  "size" : "$response.header.X-Per-Page"
+                }
+              }
+            },
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/TreeTableRow"
+                },
+                "example" : [ {
+                  "id" : null,
+                  "key" : "1000001603",
+                  "typeKey" : "Product",
+                  "cellValues" : {
+                    "upc" : "1000001603",
+                    "name" : "Датчик",
+                    "manufacturer" : "Без Производителя",
+                    "brand" : "Без Бренда",
+                    "descA" : "No",
+                    "descB" : "No",
+                    "descC" : "No",
+                    "descD" : "No",
+                    "descE" : "No",
+                    "descF" : "No",
+                    "descG" : "No",
+                    "descH" : "No",
+                    "descI" : "No",
+                    "descJ" : "No"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "key" : "1000001605",
+                  "typeKey" : "Product",
+                  "cellValues" : {
+                    "upc" : "1000001605",
+                    "name" : "Захист сканера",
+                    "manufacturer" : "Без Производителя",
+                    "brand" : "Без Бренда",
+                    "descA" : "No",
+                    "descB" : "No",
+                    "descC" : "No",
+                    "descD" : "No",
+                    "descE" : "No",
+                    "descF" : "No",
+                    "descG" : "No",
+                    "descH" : "No",
+                    "descI" : "No",
+                    "descJ" : "No"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "key" : "1000001635",
+                  "typeKey" : "Product",
+                  "cellValues" : {
+                    "upc" : "1000001635",
+                    "name" : "Таблетки для чищення",
+                    "manufacturer" : "Без Производителя",
+                    "brand" : "Без Бренда",
+                    "descA" : "No",
+                    "descB" : "No",
+                    "descC" : "No",
+                    "descD" : "No",
+                    "descE" : "No",
+                    "descF" : "No",
+                    "descG" : "No",
+                    "descH" : "No",
+                    "descI" : "No",
+                    "descJ" : "No"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "key" : "1000001636",
+                  "typeKey" : "Product",
+                  "cellValues" : {
+                    "upc" : "1000001636",
+                    "name" : "Вогнегасник вуглекислотний",
+                    "manufacturer" : "Без Производителя",
+                    "brand" : "Без Бренда",
+                    "descA" : "No",
+                    "descB" : "No",
+                    "descC" : "No",
+                    "descD" : "No",
+                    "descE" : "No",
+                    "descF" : "No",
+                    "descG" : "No",
+                    "descH" : "No",
+                    "descI" : "No",
+                    "descJ" : "No"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                }, {
+                  "key" : "1000001637",
+                  "typeKey" : "Product",
+                  "cellValues" : {
+                    "upc" : "1000001637",
+                    "name" : "Піддон для вогнегасника",
+                    "manufacturer" : "Без Производителя",
+                    "brand" : "Без Бренда",
+                    "descA" : "No",
+                    "descB" : "No",
+                    "descC" : "No",
+                    "descD" : "No",
+                    "descE" : "No",
+                    "descF" : "No",
+                    "descG" : "No",
+                    "descH" : "No",
+                    "descI" : "No",
+                    "descJ" : "No"
+                  },
+                  "rowData" : {
+                    "childrenTotal" : 0
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/attribute-filter-definitions" : {
+      "get" : {
+        "tags" : [ "Attribute filters" ],
+        "summary" : "Gets attribute filter definitions.",
+        "parameters" : [ {
+          "in" : "query",
+          "name" : "entitySpecName",
+          "required" : false,
+          "schema" : {
+            "type" : "string",
+            "example" : "Product"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the attribute filter definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/AttributeFilterDefinition"
+                  }
+                },
+                "example" : [ {
+                  "id" : 7,
+                  "name" : "Для всех",
+                  "typeKey" : "AttributeFilter.Any",
+                  "entitySpecification" : {
+                    "id" : 3,
+                    "name" : "Product"
+                  }
+                }, {
+                  "id" : 8,
+                  "name" : "Бренд",
+                  "typeKey" : "AttributeFilter.OneOf.Enum",
+                  "paramDefinitions" : [ {
+                    "id" : 5,
+                    "name" : "brand",
+                    "paramType" : "String"
+                  } ],
+                  "charSpec" : {
+                    "id" : 4,
+                    "name" : "brand",
+                    "dataType" : "Enum",
+                    "entitySpecification" : {
+                      "id" : 3,
+                      "name" : "Product"
+                    },
+                    "srcTable" : "TBLPRODUCTS",
+                    "srcColumn" : "BRAND"
+                  }
+                }, {
+                  "id" : 9,
+                  "name" : "Производитель",
+                  "typeKey" : "AttributeFilter.OneOf.Enum",
+                  "paramDefinitions" : [ {
+                    "id" : 6,
+                    "name" : "manufacturer",
+                    "paramType" : "String"
+                  } ],
+                  "charSpec" : {
+                    "id" : 5,
+                    "name" : "manufacturer",
+                    "dataType" : "Enum",
+                    "entitySpecification" : {
+                      "id" : 3,
+                      "name" : "Product"
+                    },
+                    "srcTable" : "TBLPRODUCTS",
+                    "srcColumn" : "MANUFACTURER"
+                  }
+                }, {
+                  "id" : 10,
+                  "name" : "Цена",
+                  "typeKey" : "AttributeFilter.Range",
+                  "paramDefinitions" : [ {
+                    "id" : 7,
+                    "name" : "fromPrice",
+                    "paramType" : "Double"
+                  }, {
+                    "id" : 8,
+                    "name" : "toPrice",
+                    "paramType" : "Double"
+                  } ],
+                  "charSpec" : {
+                    "id" : 6,
+                    "name" : "price",
+                    "dataType" : "Double",
+                    "entitySpecification" : {
+                      "id" : 3,
+                      "name" : "Product"
+                    },
+                    "srcTable" : "PRICETABLE?",
+                    "srcColumn" : "VALUE?"
+                  }
+                } ]
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/entity-specs/{entitySpecId}/char-specs/{charSpecId}/char-spec-values" : {
+      "parameters" : [ {
+        "in" : "path",
+        "name" : "entitySpecId",
+        "description" : "Entity specification id.",
+        "schema" : {
+          "type" : "number",
+          "format" : "int32",
+          "example" : 3
+        }
+      }, {
+        "in" : "path",
+        "name" : "charSpecId",
+        "description" : "Characteristic specification id.",
+        "schema" : {
+          "type" : "number",
+          "format" : "int32",
+          "example" : 5
+        }
+      } ],
+      "get" : {
+        "tags" : [ "Attribute filters" ],
+        "summary" : "Gets characteristic specification values.",
+        "responses" : {
+          "200" : {
+            "description" : "OK - The request was successful, the attribute filter definitions are returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "type" : "array",
+                  "items" : {
+                    "$ref" : "#/components/schemas/CharacteristicSpecValue"
+                  }
+                }
+              }
+            }
+          },
+          "304" : {
+            "$ref" : "#/components/responses/NotModified"
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/reports/{reportKey}" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Get report as pagable table or sync excel."
+      }
+    },
+    "/reports-async-tasks" : {
+      "post" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Create export report async task."
+      },
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Get export report async tasks list."
+      }
+    },
+    "/reports-async-tasks/{taskId}" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Get export report async task by id."
+      },
+      "put" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Update export report async task."
+      }
+    },
+    "/reports-async-tasks/{taskId}/content" : {
+      "get" : {
+        "tags" : [ "Reports" ],
+        "summary" : "Get export report async task file content (excel)."
+      }
+    },
+    "/authenticate" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "User login."
+      }
+    },
+    "/auth/token" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Refresh token."
+      }
+    },
+    "/users-treetable" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get all users as treetable."
+      }
+    },
+    "/permission-roles" : {
+      "post" : {
+        "tags" : [ "Users" ],
+        "summary" : "Create user role with permissions."
+      }
+    },
+    "/permission-roles/{roleId}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get user role with permissions."
+      },
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update user role with permissions."
+      },
+      "delete" : {
+        "tags" : [ "Users" ],
+        "summary" : "Delete user role with permissions."
+      }
+    },
+    "/privileges" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get all system privileges."
+      }
+    },
+    "/am-users/{userId}" : {
+      "get" : {
+        "tags" : [ "Users" ],
+        "summary" : "Get user with role."
+      },
+      "put" : {
+        "tags" : [ "Users" ],
+        "summary" : "Update user."
+      },
+      "delete" : {
+        "tags" : [ "Users" ],
+        "summary" : "Delete user."
       }
     }
   },
   "components" : {
     "schemas" : {
+      "PageParamSchema" : {
+        "type" : "number",
+        "format" : "int32",
+        "minimum" : 0,
+        "default" : 0,
+        "description" : "Page number is `int32`."
+      },
+      "PageSizeParamSchema" : {
+        "type" : "number",
+        "format" : "int32",
+        "minimum" : 1,
+        "description" : "How many items want each page to return."
+      },
+      "PrevPageParamSchema" : {
+        "type" : "number",
+        "format" : "int32",
+        "minimum" : 0,
+        "description" : "Page number is `int32` and starts at `0`."
+      },
+      "NextPageParamSchema" : {
+        "type" : "number",
+        "format" : "int32",
+        "minimum" : 1,
+        "description" : "Page number is `int32` and starts at `0`, so next page always starts from `1`."
+      },
+      "TotalPagesSchema" : {
+        "type" : "number",
+        "format" : "int32",
+        "minimum" : 0,
+        "description" : "Total pages count is `int32` (correspond to page number type)."
+      },
+      "TotalSchema" : {
+        "type" : "number",
+        "format" : "int64",
+        "minimum" : 0,
+        "description" : "Type for total items in list count."
+      },
       "TreeTableRow" : {
         "type" : "object",
         "properties" : {
           "id" : {
             "type" : "number",
             "format" : "int64",
+            "readOnly" : true
+          },
+          "key" : {
+            "type" : "string",
             "readOnly" : true
           },
           "typeKey" : {
@@ -1179,11 +2473,11 @@
         "properties" : {
           "from" : {
             "type" : "string",
-            "format" : "date"
+            "format" : "date-time"
           },
           "to" : {
             "type" : "string",
-            "format" : "date"
+            "format" : "date-time"
           }
         }
       },
@@ -1297,6 +2591,63 @@
             }
           }
         } ]
+      },
+      "StoreGroupTreeTableRow" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TreeTableRow"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "rowData" : {
+              "$ref" : "#/components/schemas/StoreGroupRowData"
+            },
+            "children" : {
+              "type" : "array",
+              "items" : {
+                "$ref" : "#/components/schemas/StoreSubgroupTreeTableRow"
+              }
+            }
+          }
+        } ]
+      },
+      "StoreSubgroupTreeTableRow" : {
+        "type" : "object",
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/TreeTableRow"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "rowData" : {
+              "$ref" : "#/components/schemas/StoreSubgroupRowData"
+            },
+            "children" : {
+              "type" : "object"
+            }
+          }
+        } ]
+      },
+      "StoreGroupRowData" : {
+        "type" : "object",
+        "properties" : {
+          "productCategoryRefs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/ProductCategoryNodeRef"
+            }
+          }
+        }
+      },
+      "StoreSubgroupRowData" : {
+        "type" : "object",
+        "properties" : {
+          "storeRefs" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/StoreRef"
+            }
+          }
+        }
       },
       "MsRuleFactor" : {
         "required" : [ "value", "type" ],
@@ -1610,6 +2961,210 @@
           }
         }
       },
+      "ProductCategoryNodeRef" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          }
+        }
+      },
+      "ProductCategoryNode" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/ProductCategoryNodeRef"
+        } ]
+      },
+      "StoreRef" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "storeNumber" : {
+            "type" : "number",
+            "format" : "int32"
+          },
+          "storeTreeNode" : {
+            "$ref" : "#/components/schemas/StoreTreeNode"
+          }
+        }
+      },
+      "Store" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/StoreRef"
+        } ]
+      },
+      "StoreTreeNode" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "key" : {
+            "type" : "string"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "parent" : {
+            "$ref" : "#/components/schemas/StoreTreeNode"
+          },
+          "children" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/StoreTreeNode"
+            }
+          },
+          "stores" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/Store"
+            }
+          }
+        }
+      },
+      "AttributeFilterDefinition" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "typeKey" : {
+            "type" : "string",
+            "enum" : [ "AttributeFilter.Any", "AttributeFilter.Equals", "AttributeFilter.Range", "AttributeFilter.OneOf.Enum", "AttributeFilter.OneOfOrAny.Enum" ]
+          },
+          "paramDefinitions" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/components/schemas/AttributeFilterParamDefinition"
+            }
+          },
+          "charSpec" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/CharacteristicSpecification"
+            }, {
+              "$ref" : "#/components/schemas/AttributeCharSpec"
+            } ]
+          },
+          "entitySpecification" : {
+            "oneOf" : [ {
+              "$ref" : "#/components/schemas/AtomicEntitySpecification"
+            } ]
+          },
+          "dataType" : {
+            "$ref" : "#/components/schemas/DataType"
+          }
+        }
+      },
+      "AttributeFilterParamDefinition" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "paramType" : {
+            "$ref" : "#/components/schemas/DataType"
+          }
+        }
+      },
+      "EntitySpecification" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "charSpecs" : {
+            "type" : "array",
+            "items" : {
+              "oneOf" : [ {
+                "$ref" : "#/components/schemas/AttributeCharSpec"
+              } ]
+            }
+          }
+        }
+      },
+      "AtomicEntitySpecification" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/EntitySpecification"
+        } ]
+      },
+      "CharacteristicSpecification" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "dataType" : {
+            "$ref" : "#/components/schemas/DataType"
+          }
+        }
+      },
+      "AttributeCharSpec" : {
+        "allOf" : [ {
+          "$ref" : "#/components/schemas/CharacteristicSpecification"
+        }, {
+          "type" : "object",
+          "properties" : {
+            "srcTable" : {
+              "type" : "string"
+            },
+            "srcColumn" : {
+              "type" : "string"
+            }
+          }
+        } ]
+      },
+      "CharacteristicSpecValue" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64"
+          },
+          "value" : {
+            "type" : "object"
+          },
+          "useAsDefault" : {
+            "type" : "boolean",
+            "example" : false
+          },
+          "dataType" : {
+            "$ref" : "#/components/schemas/DataType"
+          }
+        }
+      },
+      "DataType" : {
+        "type" : "string",
+        "enum" : [ "String", "Double", "Long", "Boolean", "Date", "Enum" ]
+      },
       "Error" : {
         "description" : "API operation error response object",
         "type" : "object",
@@ -1634,6 +3189,24 @@
           "type" : "string",
           "enum" : [ "basic", "categorical", "product" ],
           "example" : "basic"
+        }
+      },
+      "Page" : {
+        "name" : "page",
+        "in" : "query",
+        "required" : false,
+        "description" : "Page number to starts from. \nThat page numbering is `0-based`.\n",
+        "schema" : {
+          "$ref" : "#/components/schemas/PageParamSchema"
+        }
+      },
+      "PageSize" : {
+        "name" : "size",
+        "in" : "query",
+        "required" : false,
+        "description" : "How many items you want each page to return.\n",
+        "schema" : {
+          "$ref" : "#/components/schemas/PageSizeParamSchema"
         }
       },
       "Sort" : {
