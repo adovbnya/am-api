@@ -1995,7 +1995,6 @@
                   "$ref" : "#/components/schemas/TreeTableRow"
                 },
                 "example" : [ {
-                  "id" : null,
                   "key" : "1000001603",
                   "typeKey" : "Product",
                   "cellValues" : {
