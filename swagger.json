@@ -1390,7 +1390,8 @@
           "schema" : {
             "type" : "array",
             "items" : {
-              "type" : "string"
+              "type" : "number",
+              "format" : "int64"
             }
           }
         } ]
