@@ -1384,6 +1384,12 @@
         "summary" : "Get store hierarchy."
       }
     },
+    "/store-tree-nodes/{nodeId}/children" : {
+      "get" : {
+        "tags" : [ "Store hierarchy" ],
+        "summary" : "Get store hierarchy."
+      }
+    },
     "/product-category-tree-nodes" : {
       "get" : {
         "tags" : [ "Product category" ],
