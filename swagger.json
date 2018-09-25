@@ -1341,6 +1341,7 @@
       },
       "post" : {
         "tags" : [ "Store groups" ],
+        "operationId" : "createStoreGroup",
         "summary" : "Create store group.",
         "description" : "Create a new store group.\n",
         "requestBody" : {
@@ -3250,6 +3251,22 @@
         "type" : "string",
         "enum" : [ "String", "Double", "Long", "Boolean", "Date", "Enum" ]
       },
+      "StoreGroup" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "controlTotalStores" : {
+            "type" : "boolean"
+          }
+        }
+      },
       "Error" : {
         "description" : "API operation error response object",
         "type" : "object",
@@ -3349,6 +3366,12 @@
       },
       "UpdateMsRule" : {
         "operationId" : "updateMsRule",
+        "parameters" : {
+          "id" : "$response.body#/id"
+        }
+      },
+      "GetStoreGroupById" : {
+        "operationId" : "getStoreGroup",
         "parameters" : {
           "id" : "$response.body#/id"
         }
