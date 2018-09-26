@@ -1430,7 +1430,76 @@
     "/store-subgroups" : {
       "post" : {
         "tags" : [ "Store groups" ],
-        "summary" : "Create store subgroup."
+        "summary" : "Create store subgroup.",
+        "operationId" : "createStoreSubGroup",
+        "description" : "Create a new store subgroup.\n",
+        "requestBody" : {
+          "description" : "Store group object to create.",
+          "required" : true,
+          "content" : {
+            "application/json" : {
+              "schema" : {
+                "$ref" : "#/components/schemas/StoreSubGroup"
+              },
+              "example" : {
+                "name" : "StoreGroup-X",
+                "controlTotalStores" : true,
+                "productCategoryNodes" : [ {
+                  "id" : 10
+                }, {
+                  "id" : 20
+                } ]
+              }
+            }
+          }
+        },
+        "responses" : {
+          "201" : {
+            "description" : "Created - The request was successful and the resource is returned.",
+            "content" : {
+              "application/json" : {
+                "schema" : {
+                  "$ref" : "#/components/schemas/StoreGroup"
+                },
+                "example" : {
+                  "id" : 1,
+                  "name" : "StoreGroup-X",
+                  "controlTotalStores" : true,
+                  "productCategoryNodes" : [ {
+                    "id" : 10
+                  }, {
+                    "id" : 20
+                  } ]
+                }
+              }
+            },
+            "links" : {
+              "edit" : {
+                "$ref" : "#/components/links/GetStoreGroupById"
+              }
+            },
+            "headers" : {
+              "Location" : {
+                "$ref" : "#/components/headers/Location"
+              }
+            }
+          },
+          "400" : {
+            "$ref" : "#/components/responses/BadRequest"
+          },
+          "401" : {
+            "$ref" : "#/components/responses/Unauthorized"
+          },
+          "403" : {
+            "$ref" : "#/components/responses/Forbidden"
+          },
+          "409" : {
+            "$ref" : "#/components/responses/Conflict"
+          },
+          "5XX" : {
+            "$ref" : "#/components/responses/UnexpectedError"
+          }
+        }
       }
     },
     "/store-subgroups/{id}" : {
