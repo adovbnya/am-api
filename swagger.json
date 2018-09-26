@@ -1442,9 +1442,12 @@
                 "$ref" : "#/components/schemas/StoreSubGroup"
               },
               "example" : {
-                "name" : "StoreGroup-X",
-                "controlTotalStores" : true,
-                "productCategoryNodes" : [ {
+                "name" : "StoreSubGroup-A",
+                "description" : "Some description",
+                "group" : {
+                  "id" : 111
+                },
+                "stores" : [ {
                   "id" : 10
                 }, {
                   "id" : 20
@@ -1459,13 +1462,17 @@
             "content" : {
               "application/json" : {
                 "schema" : {
-                  "$ref" : "#/components/schemas/StoreGroup"
+                  "$ref" : "#/components/schemas/StoreSubGroup"
                 },
                 "example" : {
                   "id" : 1,
-                  "name" : "StoreGroup-X",
-                  "controlTotalStores" : true,
-                  "productCategoryNodes" : [ {
+                  "name" : "StoreSubGroup-A",
+                  "description" : "Some description",
+                  "group" : {
+                    "id" : 111,
+                    "name" : "StoreGroup-X"
+                  },
+                  "stores" : [ {
                     "id" : 10
                   }, {
                     "id" : 20
@@ -1475,7 +1482,7 @@
             },
             "links" : {
               "edit" : {
-                "$ref" : "#/components/links/GetStoreGroupById"
+                "$ref" : "#/components/links/GetStoreSubGroupById"
               }
             },
             "headers" : {
@@ -3441,6 +3448,12 @@
       },
       "GetStoreGroupById" : {
         "operationId" : "getStoreGroup",
+        "parameters" : {
+          "id" : "$response.body#/id"
+        }
+      },
+      "GetStoreSubGroupById" : {
+        "operationId" : "getStoreSubGroup",
         "parameters" : {
           "id" : "$response.body#/id"
         }
