@@ -1439,18 +1439,18 @@
           "content" : {
             "application/json" : {
               "schema" : {
-                "$ref" : "#/components/schemas/StoreSubGroup"
+                "$ref" : "#/components/schemas/StoreSubGroupEdit"
               },
               "example" : {
                 "name" : "StoreSubGroup-A",
                 "description" : "Some description",
                 "group" : {
-                  "id" : 111
+                  "id" : 50
                 },
-                "stores" : [ {
-                  "id" : 10
+                "storeTreeNodes" : [ {
+                  "id" : 111
                 }, {
-                  "id" : 20
+                  "id" : 222
                 } ]
               }
             }
@@ -3340,6 +3340,39 @@
           },
           "controlTotalStores" : {
             "type" : "boolean"
+          }
+        }
+      },
+      "StoreSubGroupEdit" : {
+        "type" : "object",
+        "required" : [ "id", "name" ],
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64",
+            "readOnly" : true
+          },
+          "name" : {
+            "type" : "string"
+          },
+          "description" : {
+            "type" : "string"
+          },
+          "group" : {
+            "$ref" : "#/components/schemas/StoreSubGroup"
+          },
+          "storeTreeNodes" : {
+            "$ref" : "#/components/schemas/StoreTreeNodeView"
+          }
+        }
+      },
+      "StoreTreeNodeView" : {
+        "type" : "object",
+        "properties" : {
+          "id" : {
+            "type" : "number",
+            "format" : "int64",
+            "readOnly" : true
           }
         }
       },
